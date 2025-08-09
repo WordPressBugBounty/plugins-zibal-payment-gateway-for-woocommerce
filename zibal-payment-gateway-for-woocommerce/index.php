@@ -1,10 +1,13 @@
 <?php
 /*
   Plugin Name: Gateway zibal for Woocommerce
-  Version: 1.7
+  Version: 1.8
   Description: این افزونه درگاه زیبال برای فروشگاه ساز ووکامرس میباشد.
   Author: zibal
   Author URI: https://zibal.ir
+  Stable tag: 1.8
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
 if (!defined('ABSPATH'))
@@ -19,7 +22,7 @@ function load_zibal_woo_gateway()
     add_filter('woocommerce_payment_gateways', 'Woocommerce_Add_zibal_Gateway');
     function Woocommerce_Add_zibal_Gateway($methods)
     {
-        $methods[] = 'WC_zibal';
+        $methods[] = 'WC_Zibal';
         return $methods;
     }
     require_once(WOO_GAPIRDIRZIBAL . 'class-wc-gateway-zibal.php');

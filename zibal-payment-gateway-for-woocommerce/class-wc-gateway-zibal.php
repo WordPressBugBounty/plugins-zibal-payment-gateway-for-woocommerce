@@ -3,9 +3,9 @@
 if (!defined('ABSPATH'))
   exit;
 
-if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
+if (class_exists('WC_Payment_Gateway') && !class_exists('WC_Zibal')) {
 
-  class WC_zibal extends WC_Payment_Gateway
+  class WC_Zibal extends WC_Payment_Gateway
   {
 
     private $pin;
@@ -19,7 +19,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
 
       $this->author = 'zibal.ir';
 
-      $this->id = 'WC_zibal';
+      $this->id = 'WC_Zibal';
       $this->method_title = __('زیبال', 'woocommerce');
       $this->method_description = __('تنظیمات درگاه پرداخت زیبال برای افزونه فروشگاه ساز ووکامرس', 'woocommerce');
       $this->icon = apply_filters('woo_zibal_logo', WOO_GAPIRDUZIBAL . '/assets/images/logo.png');
@@ -59,7 +59,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
     public function init_form_fields()
     {
       $this->form_fields = apply_filters(
-        'WC_zibal_Config',
+        'WC_Zibal_Config',
         array(
 
           'base_confing' => array(
@@ -146,18 +146,18 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
       $woocommerce->session->order_id_zibal = $order_id;
       $order = new WC_Order($order_id);
       $currency = $order->get_currency();
-      $currency = apply_filters('WC_zibal_Currency', $currency, $order_id);
+      $currency = apply_filters('WC_Zibal_Currency', $currency, $order_id);
       $action = $this->author;
       do_action('WC_Gateway_Payment_Actions', $action);
       $form = '<form action="" method="POST" class="zibal-checkout-form" id="zibal-checkout-form">
 						<input type="submit" name="zibal_submit" class="button alt" id="zibal-payment-button" value="' . __('پرداخت', 'woocommerce') . '"/>
 						<a class="button cancel" href="' . wc_get_checkout_url() . '">' . __('بازگشت', 'woocommerce') . '</a>
 					 </form><br/>';
-      $form = apply_filters('WC_zibal_Form', $form, $order_id, $woocommerce);
+      $form = apply_filters('WC_Zibal_Form', $form, $order_id, $woocommerce);
 
-      do_action('WC_zibal_Gateway_Before_Form', $order_id, $woocommerce);
+      do_action('WC_Zibal_Gateway_Before_Form', $order_id, $woocommerce);
       echo $form;
-      do_action('WC_zibal_Gateway_After_Form', $order_id, $woocommerce);
+      do_action('WC_Zibal_Gateway_After_Form', $order_id, $woocommerce);
 
       $action = $this->author;
       do_action('WC_Gateway_Payment_Actions', $action);
@@ -194,10 +194,10 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
       $Email = $order->get_billing_email();
 
 
-      $Description = apply_filters('WC_zibal_Description', $Description, $order_id);
-      do_action('WC_zibal_Gateway_Payment', $order_id, $Description);
+      $Description = apply_filters('WC_Zibal_Description', $Description, $order_id);
+      do_action('WC_Zibal_Gateway_Payment', $order_id, $Description);
 
-      $CallbackURL = add_query_arg('wc_order', $order_id, WC()->api_request_url('WC_zibal'));
+      $CallbackURL = add_query_arg('wc_order', $order_id, WC()->api_request_url('WC_Zibal'));
 
       $Sandbox = $this->sandbox;
 
@@ -257,16 +257,16 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
       if (!empty($Message) && $Message) {
 
         $Note = sprintf(__('خطا در هنگام ارسال به بانک : %s', 'woocommerce'), $Message);
-        $Note = apply_filters('WC_zibal_Send_to_Gateway_Failed_Note', $Note, $order_id, $Fault);
+        $Note = apply_filters('WC_Zibal_Send_to_Gateway_Failed_Note', $Note, $order_id, $Fault);
         $order->add_order_note($Note);
 
 
         $Notice = sprintf(__('در هنگام اتصال به بانک خطای زیر رخ داده است : <br/>%s', 'woocommerce'), $Message);
-        $Notice = apply_filters('WC_zibal_Send_to_Gateway_Failed_Notice', $Notice, $order_id, $Fault);
+        $Notice = apply_filters('WC_Zibal_Send_to_Gateway_Failed_Notice', $Notice, $order_id, $Fault);
         if ($Notice)
           wc_add_notice($Notice, 'error');
 
-        do_action('WC_zibal_Send_to_Gateway_Failed', $order_id, $Fault);
+        do_action('WC_Zibal_Send_to_Gateway_Failed', $order_id, $Fault);
       }
     }
 
@@ -342,7 +342,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
             curl_close($ch);
             $result = json_decode($result);
 
-            if ($result->result == "100") {
+            if ($result->result == "100" && $result->amount == $Amount) {
               $Status = 'completed';
               $Transaction_ID = $trackId;
               $verify_cardnum = $card_number;
@@ -379,7 +379,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
             $Note = sprintf(__('پرداخت موفقیت آمیز بود .<br/> کد رهگیری : %s', 'woocommerce'), $Transaction_ID);
             $Note .= sprintf(__('<br/> شماره کارت پرداخت کننده : %s', 'woocommerce'), $verify_cardnum);
             $Note .= sprintf(__('<br/> شماره تراکنش : %s', 'woocommerce'), $verify_tracking);
-            $Note = apply_filters('WC_zibal_Return_from_Gateway_Success_Note', $Note, $order_id, $Transaction_ID, $verify_cardnum, $verify_tracking);
+            $Note = apply_filters('WC_Zibal_Return_from_Gateway_Success_Note', $Note, $order_id, $Transaction_ID, $verify_cardnum, $verify_tracking);
             if ($Note)
               $order->add_order_note($Note, 1);
 
@@ -388,11 +388,11 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
 
             $Notice = str_replace("{transaction_id}", $Transaction_ID, $Notice);
 
-            $Notice = apply_filters('WC_zibal_Return_from_Gateway_Success_Notice', $Notice, $order_id, $Transaction_ID);
+            $Notice = apply_filters('WC_Zibal_Return_from_Gateway_Success_Notice', $Notice, $order_id, $Transaction_ID);
             if ($Notice)
               wc_add_notice($Notice, 'success');
 
-            do_action('WC_zibal_Return_from_Gateway_Success', $order_id, $Transaction_ID);
+            do_action('WC_Zibal_Return_from_Gateway_Success', $order_id, $Transaction_ID);
 
             wp_redirect(add_query_arg('wc_status', 'success', $this->get_return_url($order)));
             exit;
@@ -404,7 +404,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
 
             $Note = sprintf(__('خطا در هنگام بازگشت از بانک : %s %s', 'woocommerce'), $Message, $tr_id);
 
-            $Note = apply_filters('WC_zibal_Return_from_Gateway_Failed_Note', $Note, $order_id, $Transaction_ID, $Fault);
+            $Note = apply_filters('WC_Zibal_Return_from_Gateway_Failed_Note', $Note, $order_id, $Transaction_ID, $Fault);
             if ($Note)
               $order->add_order_note($Note, 1);
 
@@ -413,11 +413,11 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
             $Notice = str_replace("{transaction_id}", $Transaction_ID, $Notice);
 
             $Notice = str_replace("{fault}", $Message, $Notice);
-            $Notice = apply_filters('WC_zibal_Return_from_Gateway_Failed_Notice', $Notice, $order_id, $Transaction_ID, $Fault);
+            $Notice = apply_filters('WC_Zibal_Return_from_Gateway_Failed_Notice', $Notice, $order_id, $Transaction_ID, $Fault);
             if ($Notice)
               wc_add_notice($Notice, 'error');
 
-            do_action('WC_zibal_Return_from_Gateway_Failed', $order_id, $Transaction_ID, $Fault);
+            do_action('WC_Zibal_Return_from_Gateway_Failed', $order_id, $Transaction_ID, $Fault);
 
             wp_redirect(wc_get_checkout_url());
             exit;
@@ -430,12 +430,12 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
 
           $Notice = str_replace("{transaction_id}", $Transaction_ID, $Notice);
 
-          $Notice = apply_filters('WC_zibal_Return_from_Gateway_ReSuccess_Notice', $Notice, $order_id, $Transaction_ID);
+          $Notice = apply_filters('WC_Zibal_Return_from_Gateway_ReSuccess_Notice', $Notice, $order_id, $Transaction_ID);
           if ($Notice)
             wc_add_notice($Notice, 'success');
 
 
-          do_action('WC_zibal_Return_from_Gateway_ReSuccess', $order_id, $Transaction_ID);
+          do_action('WC_Zibal_Return_from_Gateway_ReSuccess', $order_id, $Transaction_ID);
 
           wp_redirect(add_query_arg('wc_status', 'success', $this->get_return_url($order)));
           exit;
@@ -445,11 +445,11 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
         $Fault = __('شماره سفارش وجود ندارد .', 'woocommerce');
         $Notice = wpautop(wptexturize($this->failed_massage));
         $Notice = str_replace("{fault}", $Fault, $Notice);
-        $Notice = apply_filters('WC_zibal_Return_from_Gateway_No_Order_ID_Notice', $Notice, $order_id, $Fault);
+        $Notice = apply_filters('WC_Zibal_Return_from_Gateway_No_Order_ID_Notice', $Notice, $order_id, $Fault);
         if ($Notice)
           wc_add_notice($Notice, 'error');
 
-        do_action('WC_zibal_Return_from_Gateway_No_Order_ID', $order_id, $Transaction_ID, $Fault);
+        do_action('WC_Zibal_Return_from_Gateway_No_Order_ID', $order_id, $Transaction_ID, $Fault);
 
         wp_redirect(wc_get_checkout_url());
         exit;
@@ -463,7 +463,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
       }
       $message = sprintf(
         __('درگاه زیبال در حالت پرداخت آزمایشی فعال است. پرداخت‌های واقعی انجام نخواهند شد. برای غیرفعال کردن این حالت، به تنظیمات درگاه <a href="%s">اینجا</a> مراجعه کنید.'),
-        admin_url('admin.php?page=wc-settings&tab=checkout&section=wc_zibal')
+        admin_url('admin.php?page=wc-settings&tab=checkout&section=WC_Zibal')
       );
       echo '<div class="notice notice-error is-dismissible">';
       echo '<p>' . $message . '</p>';
@@ -476,7 +476,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_zibal')) {
       if (empty($pin) && 'yes' === $this->settings['enabled']) {
         $message = sprintf(
           __('مرچنت کد درگاه زیبال خالی است. برای تکمیل مورد مربوطه به تنظیمات درگاه <a href="%s">اینجا</a> مراجعه کنید.', ),
-          admin_url('admin.php?page=wc-settings&tab=checkout&section=wc_zibal')
+          admin_url('admin.php?page=wc-settings&tab=checkout&section=WC_Zibal')
         );
         echo '<div class="notice notice-warning is-dismissible">';
         echo '<p>' . $message . '</p>';
