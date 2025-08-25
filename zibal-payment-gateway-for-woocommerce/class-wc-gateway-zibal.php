@@ -220,7 +220,7 @@ if (class_exists('WC_Payment_Gateway') && !class_exists('WC_Zibal')) {
         'merchant' => $apiID,
         'amount' => $Amount,
         'callbackUrl' => $CallbackURL,
-        'invoice_id' => $order_id,
+        'orderId' => $order_id,
         'mobile' => $Tell,
         'email' => $Email,
         'description' => $Description

@@ -1,11 +1,11 @@
 <?php
 /*
   Plugin Name: Gateway zibal for Woocommerce
-  Version: 1.8
+  Version: 1.9
   Description: این افزونه درگاه زیبال برای فروشگاه ساز ووکامرس میباشد.
   Author: zibal
   Author URI: https://zibal.ir
-  Stable tag: 1.8
+  Stable tag: 1.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 */
